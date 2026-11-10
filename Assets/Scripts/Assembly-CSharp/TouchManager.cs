@@ -104,7 +104,7 @@ public class TouchManager : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -118,36 +118,36 @@ public class TouchManager : MonoBehaviour
 
 	public bool isTouchOff(TFGTouch touch)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public bool anyTouch()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public Vector2 getTouchPosition(int fingerID)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public Vector2 getTouchDelta(int fingerID)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public TFGScreenTouch getTouch(int fingerID)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public Vector2 getTouchRelativeDelta(int fingerID)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public _Touch[] GenerateTouchList()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 }

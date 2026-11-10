@@ -24,7 +24,7 @@ public class TFGTouchScroll : MonoBehaviour
 		{
 			get
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 		}
 
@@ -103,7 +103,7 @@ public class TFGTouchScroll : MonoBehaviour
 
 	public Vector3 setAbs(Vector3 vec, float val, VectorB vb)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void onTouchStay(TouchManager.TFGTouch touch)
@@ -116,12 +116,12 @@ public class TFGTouchScroll : MonoBehaviour
 
 	public GameObject getElement(int id)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public GameObject getSelectedElement()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void executeSelected()

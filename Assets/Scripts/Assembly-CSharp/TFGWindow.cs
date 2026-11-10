@@ -70,7 +70,7 @@ public class TFGWindow : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -78,7 +78,7 @@ public class TFGWindow : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -136,12 +136,12 @@ public class TFGWindow : MonoBehaviour
 
 	public bool isClosed()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public bool isOpen()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void updateOpening()
@@ -150,7 +150,7 @@ public class TFGWindow : MonoBehaviour
 
 	public bool finishedOpening()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void close()
@@ -167,12 +167,12 @@ public class TFGWindow : MonoBehaviour
 
 	public bool finishedClosing()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public TFGWindow[] getChildWindows()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void OnDrawGizmos()
