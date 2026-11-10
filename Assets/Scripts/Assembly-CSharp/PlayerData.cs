@@ -1,200 +1,247 @@
+using System;
+using UnityEngine;
+
+/// <summary>
+/// Replacement for the stripped player progress manager. Save keys are new
+/// recovery keys; compatibility with the original iOS save data is not asserted.
+/// </summary>
 public class PlayerData
 {
-	private static PlayerData _instance;
+    private static PlayerData _instance;
+    public static PlayerData instance { get { return _instance ?? (_instance = new PlayerData()); } }
 
-	public bool isSoundOn;
+    public bool isSoundOn;
+    public bool isMusicOn;
+    public int graphicsQuality;
+    private int optionsSize;
+    private bool[] tutTips;
+    public int currentJelly;
+    public bool[] myJellies;
+    private int lifeCoinsCount;
+    public int hearts;
+    public int usedLifes;
+    public bool[] collectedLives;
+    private int numLevels;
+    private int[] bestJumps;
+    private int[] levelPlayCount;
+    public int currentLevel;
+    private int[] levelstars;
+    public bool played;
+    public int totalPlayCount;
+    public bool showNewLevelEffect;
+    public int currentLevelDeathCount;
+    public int currentLevelRetryCount;
+    public int shopOfferCount;
+    public int jellyOfferCicleIdx;
 
-	public bool isMusicOn;
+    public bool tutMorePage
+    {
+        get { return PlayerPrefs.GetInt("JJ.tutorial.more", 0) != 0; }
+        set { PlayerPrefs.SetInt("JJ.tutorial.more", value ? 1 : 0); PlayerPrefs.Save(); }
+    }
+    public int NumLevels { get { return numLevels; } }
+    public LevelData currentLevelData { get { return LevelData.getByID(currentLevel); } }
 
-	public int graphicsQuality;
+    private PlayerData()
+    {
+        getOptions();
+        getTutorial();
+        getJellyData();
+        getItemData();
+        getLevelData();
+        currentLevel = Math.Max(0, PlayerPrefs.GetInt("JellyJump.CurrentLevel", 0));
+        totalPlayCount = PlayerPrefs.GetInt("JJ.totalPlays", 0);
+        played = PlayerPrefs.GetInt("JJ.played", 0) != 0;
+        shopOfferCount = PlayerPrefs.GetInt("JJ.shopOffers", 0);
+    }
 
-	private int optionsSize;
+    private void getOptions()
+    {
+        isSoundOn = PlayerPrefs.GetInt("JJ.sound", 1) != 0;
+        isMusicOn = PlayerPrefs.GetInt("JJ.music", 1) != 0;
+        graphicsQuality = PlayerPrefs.GetInt("JJ.quality", 1);
+    }
 
-	private bool[] tutTips;
+    public void setOptions()
+    {
+        PlayerPrefs.SetInt("JJ.sound", isSoundOn ? 1 : 0);
+        PlayerPrefs.SetInt("JJ.music", isMusicOn ? 1 : 0);
+        PlayerPrefs.SetInt("JJ.quality", graphicsQuality);
+        PlayerPrefs.Save();
+    }
 
-	public int currentJelly;
+    private void getTutorial()
+    {
+        tutTips = getBoolArray("JJ.tutorial", 24);
+    }
 
-	public bool[] myJellies;
+    private void setTutorial()
+    {
+        setBoolArray("JJ.tutorial", tutTips, tutTips == null ? 0 : tutTips.Length);
+    }
 
-	private int lifeCoinsCount;
+    private void getJellyData()
+    {
+        currentJelly = PlayerPrefs.GetInt("JJ.currentJelly", 0);
+        myJellies = getBoolArray("JJ.jellies", 32);
+        if (myJellies.Length > 0) myJellies[0] = true;
+    }
 
-	public int hearts;
+    public void setJellyData()
+    {
+        PlayerPrefs.SetInt("JJ.currentJelly", currentJelly);
+        setBoolArray("JJ.jellies", myJellies, myJellies == null ? 0 : myJellies.Length);
+        PlayerPrefs.Save();
+    }
 
-	public int usedLifes;
+    private void getItemData()
+    {
+        hearts = PlayerPrefs.GetInt("JJ.hearts", 0);
+        usedLifes = PlayerPrefs.GetInt("JJ.usedLives", 0);
+        lifeCoinsCount = PlayerPrefs.GetInt("JJ.lifeCoins", 0);
+        collectedLives = getBoolArray("JJ.collectedLives", 64);
+    }
 
-	public bool[] collectedLives;
+    public void setItemData()
+    {
+        PlayerPrefs.SetInt("JJ.hearts", hearts);
+        PlayerPrefs.SetInt("JJ.usedLives", usedLifes);
+        PlayerPrefs.SetInt("JJ.lifeCoins", lifeCoinsCount);
+        setBoolArray("JJ.collectedLives", collectedLives, collectedLives == null ? 0 : collectedLives.Length);
+        PlayerPrefs.Save();
+    }
 
-	private int numLevels;
+    // Compatibility entry point used by the recovered game controller.
+    public void setItemDataForRecovery() { setItemData(); }
 
-	private int[] bestJumps;
+    public int getStarCount()
+    {
+        int total = 0;
+        foreach (int v in levelstars) total += v;
+        return total;
+    }
 
-	private int[] levelPlayCount;
+    private void getLevelData()
+    {
+        numLevels = Math.Max(32, LevelData.LevelList.Length);
+        bestJumps = new int[numLevels];
+        levelPlayCount = new int[numLevels];
+        levelstars = new int[numLevels];
+        for (int i = 0; i < numLevels; ++i)
+        {
+            bestJumps[i] = PlayerPrefs.GetInt("JJ.best." + i, 0);
+            levelPlayCount[i] = PlayerPrefs.GetInt("JJ.plays." + i, 0);
+            levelstars[i] = PlayerPrefs.GetInt("JJ.stars." + i, 0);
+        }
+    }
 
-	public int currentLevel;
+    private void EnsureCapacity(int level)
+    {
+        if (level < numLevels) return;
+        int capacity = Math.Max(level + 1, Math.Max(32, numLevels * 2));
+        Array.Resize(ref bestJumps, capacity);
+        Array.Resize(ref levelPlayCount, capacity);
+        Array.Resize(ref levelstars, capacity);
+        numLevels = capacity;
+    }
 
-	private int[] levelstars;
+    public void increaseTotalPlayCount()
+    {
+        totalPlayCount++;
+        played = true;
+        PlayerPrefs.SetInt("JJ.totalPlays", totalPlayCount);
+        PlayerPrefs.SetInt("JJ.played", 1);
+        PlayerPrefs.Save();
+    }
 
-	public bool played;
+    public string getCurrentLevelScene()
+    {
+        LevelData record = currentLevelData;
+        if (record != null && !string.IsNullOrEmpty(record.sceneName)) return record.sceneName;
+        GameControl game = GameControl.instance;
+        if (game != null && game.levels != null && currentLevel >= 0 && currentLevel < game.levels.Length)
+            return game.levels[currentLevel];
+        return "L1";
+    }
 
-	public int totalPlayCount;
+    public void setLevelRecord(int jumps) { setLevelRecord(currentLevel, jumps); }
 
-	public bool showNewLevelEffect;
+    public void setLevelRecord(int level, int jumps)
+    {
+        if (level < 0 || jumps <= 0) return;
+        EnsureCapacity(level);
+        if (bestJumps[level] == 0 || jumps < bestJumps[level])
+        {
+            bestJumps[level] = jumps;
+            PlayerPrefs.SetInt("JJ.best." + level, jumps);
+            PlayerPrefs.Save();
+        }
+    }
 
-	public int currentLevelDeathCount;
+    public int getLevelRecord(int level)
+    {
+        return level >= 0 && level < bestJumps.Length ? bestJumps[level] : 0;
+    }
 
-	public int currentLevelRetryCount;
+    public void setLevelStars(int level, int stars)
+    {
+        if (level < 0) return;
+        EnsureCapacity(level);
+        levelstars[level] = Math.Max(levelstars[level], stars);
+        PlayerPrefs.SetInt("JJ.stars." + level, levelstars[level]);
+        PlayerPrefs.Save();
+    }
 
-	public int shopOfferCount;
+    public void setLevelStars(int stars) { setLevelStars(currentLevel, stars); }
 
-	public int jellyOfferCicleIdx;
+    public int getLevelStars(int level)
+    {
+        return level >= 0 && level < levelstars.Length ? levelstars[level] : 0;
+    }
 
-	public static PlayerData instance
-	{
-		get
-		{
-			return default;
-		}
-	}
+    public void increaseLevelPlayCount(int level)
+    {
+        if (level < 0) return;
+        EnsureCapacity(level);
+        levelPlayCount[level]++;
+        PlayerPrefs.SetInt("JJ.plays." + level, levelPlayCount[level]);
+        PlayerPrefs.Save();
+    }
 
-	public bool tutMorePage
-	{
-		get
-		{
-			return default;
-		}
-		set
-		{
-		}
-	}
+    public int getLevelPlayCount(int level)
+    {
+        return level >= 0 && level < levelPlayCount.Length ? levelPlayCount[level] : 0;
+    }
 
-	public int NumLevels
-	{
-		get
-		{
-			return default;
-		}
-	}
+    public void setShopOffer()
+    {
+        shopOfferCount++;
+        PlayerPrefs.SetInt("JJ.shopOffers", shopOfferCount);
+        PlayerPrefs.Save();
+    }
 
-	public LevelData currentLevelData
-	{
-		get
-		{
-			return default;
-		}
-	}
+    private void getOffers() { shopOfferCount = PlayerPrefs.GetInt("JJ.shopOffers", 0); }
 
-	private PlayerData()
-	{
-	}
+    private static bool[] getBoolArray(string name, int length)
+    {
+        return getBoolArray(name, length, false);
+    }
 
-	private void getOptions()
-	{
-	}
+    private static bool[] getBoolArray(string name, int length, bool defaultValue)
+    {
+        bool[] result = new bool[Math.Max(length, 0)];
+        for (int i = 0; i < result.Length; i++)
+            result[i] = PlayerPrefs.GetInt(name + "." + i, defaultValue ? 1 : 0) != 0;
+        return result;
+    }
 
-	public void setOptions()
-	{
-	}
+    private static void setBoolArray(string name, bool[] data, int length)
+    {
+        if (data == null) return;
+        for (int i = 0; i < length && i < data.Length; i++)
+            PlayerPrefs.SetInt(name + "." + i, data[i] ? 1 : 0);
+        PlayerPrefs.Save();
+    }
 
-	private void getTutorial()
-	{
-	}
-
-	private void setTutorial()
-	{
-	}
-
-	private void getJellyData()
-	{
-	}
-
-	public void setJellyData()
-	{
-	}
-
-	private void getItemData()
-	{
-	}
-
-	public void setItemData()
-	{
-	}
-
-	public int getStarCount()
-	{
-		return default;
-	}
-
-	private void getLevelData()
-	{
-	}
-
-	public void increaseTotalPlayCount()
-	{
-	}
-
-	public string getCurrentLevelScene()
-	{
-		return default;
-	}
-
-	public void setLevelRecord(int jumps)
-	{
-	}
-
-	public void setLevelRecord(int level, int jumps)
-	{
-	}
-
-	public int getLevelRecord(int level)
-	{
-		return default;
-	}
-
-	public void setLevelStars(int level, int stars)
-	{
-	}
-
-	public void setLevelStars(int stars)
-	{
-	}
-
-	public int getLevelStars(int level)
-	{
-		return default;
-	}
-
-	public void increaseLevelPlayCount(int level)
-	{
-	}
-
-	public int getLevelPlayCount(int level)
-	{
-		return default;
-	}
-
-	public void setShopOffer()
-	{
-	}
-
-	private void getOffers()
-	{
-	}
-
-	private static bool[] getBoolArray(string name, int length)
-	{
-		return default;
-	}
-
-	private static bool[] getBoolArray(string name, int length, bool defaultValue)
-	{
-		return default;
-	}
-
-	private static void setBoolArray(string name, bool[] data, int length)
-	{
-	}
-
-	public void setDebugSaves()
-	{
-	}
+    public void setDebugSaves() { /* Do not reset progress during recovery. */ }
 }
