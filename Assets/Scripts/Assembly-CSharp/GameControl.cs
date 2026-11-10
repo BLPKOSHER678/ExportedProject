@@ -74,7 +74,7 @@ public class GameControl : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -112,7 +112,7 @@ public class GameControl : MonoBehaviour
 
 	public bool isPlayerDied()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void resetLevel()
@@ -129,7 +129,7 @@ public class GameControl : MonoBehaviour
 
 	public int getJumpCount()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void pauseGame()
@@ -146,7 +146,7 @@ public class GameControl : MonoBehaviour
 
 	public int getCoinsCollected()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void enableCheckpoint(int id)
@@ -155,7 +155,7 @@ public class GameControl : MonoBehaviour
 
 	public int getCheckpointCount()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public static void resetCheckPoints()

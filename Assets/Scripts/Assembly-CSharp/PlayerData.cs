@@ -52,7 +52,7 @@ public class PlayerData
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -60,7 +60,7 @@ public class PlayerData
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 		set
 		{
@@ -71,7 +71,7 @@ public class PlayerData
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -79,7 +79,7 @@ public class PlayerData
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -121,7 +121,7 @@ public class PlayerData
 
 	public int getStarCount()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void getLevelData()
@@ -134,7 +134,7 @@ public class PlayerData
 
 	public string getCurrentLevelScene()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void setLevelRecord(int jumps)
@@ -147,7 +147,7 @@ public class PlayerData
 
 	public int getLevelRecord(int level)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void setLevelStars(int level, int stars)
@@ -160,7 +160,7 @@ public class PlayerData
 
 	public int getLevelStars(int level)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void increaseLevelPlayCount(int level)
@@ -169,7 +169,7 @@ public class PlayerData
 
 	public int getLevelPlayCount(int level)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void setShopOffer()
@@ -182,12 +182,12 @@ public class PlayerData
 
 	private static bool[] getBoolArray(string name, int length)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private static bool[] getBoolArray(string name, int length, bool defaultValue)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private static void setBoolArray(string name, bool[] data, int length)
