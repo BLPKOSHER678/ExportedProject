@@ -35,7 +35,7 @@ public class CFX_Demo : MonoBehaviour
 
 	private GameObject spawnParticle()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void OnGUI()
@@ -45,7 +45,7 @@ public class CFX_Demo : MonoBehaviour
 	[DebuggerHidden]
 	private IEnumerator RandomSpawnsCoroutine()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void Update()

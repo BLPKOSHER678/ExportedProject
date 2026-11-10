@@ -47,7 +47,7 @@ public class ChartboostExample : MonoBehaviour
 
 	private bool shouldDisplayInterstitial(CBLocation location)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void didDisplayInterstitial(CBLocation location)
@@ -76,7 +76,7 @@ public class ChartboostExample : MonoBehaviour
 
 	private bool shouldDisplayMoreApps(CBLocation location)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void didDisplayMoreApps(CBLocation location)
@@ -109,7 +109,7 @@ public class ChartboostExample : MonoBehaviour
 
 	private bool shouldDisplayRewardedVideo(CBLocation location)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void didCompleteRewardedVideo(CBLocation location, int reward)

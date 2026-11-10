@@ -33,7 +33,7 @@ namespace ChartboostSDK
 			{
 				get
 				{
-					/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+					return default;
 				}
 			}
 
@@ -41,7 +41,7 @@ namespace ChartboostSDK
 			{
 				get
 				{
-					/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+					return default;
 				}
 			}
 
@@ -49,7 +49,7 @@ namespace ChartboostSDK
 			{
 				get
 				{
-					/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+					return default;
 				}
 			}
 
@@ -57,7 +57,7 @@ namespace ChartboostSDK
 			{
 				get
 				{
-					/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+					return default;
 				}
 			}
 
@@ -67,12 +67,12 @@ namespace ChartboostSDK
 
 			public static bool IsWordBreak(char c)
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			public static object Parse(string jsonString)
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			public void Dispose()
@@ -81,32 +81,32 @@ namespace ChartboostSDK
 
 			private Hashtable ParseObject()
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			private ArrayList ParseArray()
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			private object ParseValue()
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			private object ParseByToken(TOKEN token)
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			private string ParseString()
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			private object ParseNumber()
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			private void EatWhitespace()
@@ -124,7 +124,7 @@ namespace ChartboostSDK
 
 			public static string Serialize(object obj)
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 
 			private void SerializeValue(object val)
@@ -150,12 +150,12 @@ namespace ChartboostSDK
 
 		public static object Deserialize(string json)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static string Serialize(object obj)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 }

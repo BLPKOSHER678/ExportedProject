@@ -21,13 +21,13 @@ public class CFX_SpawnSystem : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
 	public static GameObject GetNextObject(GameObject sourceObj, bool activateObject = true)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public static void PreloadObject(GameObject sourceObj, int poolSize = 1)
