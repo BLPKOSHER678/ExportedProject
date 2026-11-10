@@ -167,7 +167,43 @@ public class GameControl : MonoBehaviour
             yield break;
         }
         yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        RestoreMissingBackgroundQuads(SceneManager.GetSceneByName(sceneName));
         loadedBackgroundName = sceneName;
+    }
+
+    private static Mesh restoredBackgroundQuad;
+
+    private void RestoreMissingBackgroundQuads(Scene scene)
+    {
+        if (!scene.IsValid() || !scene.isLoaded) return;
+        // AssetRipper preserved the original background scene structure and materials,
+        // but may not preserve the shared source mesh referenced by its planes.
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            foreach (MeshFilter filter in root.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (filter.sharedMesh != null) continue;
+                if (restoredBackgroundQuad == null)
+                {
+                    restoredBackgroundQuad = new Mesh();
+                    restoredBackgroundQuad.name = "Jelly Jump restored background quad";
+                    restoredBackgroundQuad.vertices = new Vector3[]
+                    {
+                        new Vector3(-0.5f, -0.5f, 0f), new Vector3(-0.5f, 0.5f, 0f),
+                        new Vector3(0.5f, 0.5f, 0f), new Vector3(0.5f, -0.5f, 0f)
+                    };
+                    restoredBackgroundQuad.uv = new Vector2[]
+                    {
+                        new Vector2(0f, 0f), new Vector2(0f, 1f),
+                        new Vector2(1f, 1f), new Vector2(1f, 0f)
+                    };
+                    restoredBackgroundQuad.triangles = new int[] { 0, 1, 2, 0, 2, 3 };
+                    restoredBackgroundQuad.RecalculateNormals();
+                    restoredBackgroundQuad.RecalculateBounds();
+                }
+                filter.sharedMesh = restoredBackgroundQuad;
+            }
+        }
     }
 
     private void ResetLevelAfterLoad()
