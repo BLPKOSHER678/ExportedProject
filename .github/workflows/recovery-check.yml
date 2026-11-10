@@ -1,0 +1,17 @@
+name: Jelly Jump static recovery checks
+
+on:
+  push:
+    branches: [jelly-jump-repair]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate decompiled sources and Unity scenes
+        run: python3 .github/scripts/verify_recovery.py
