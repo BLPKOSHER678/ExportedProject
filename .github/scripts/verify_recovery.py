@@ -14,7 +14,7 @@ for file in scripts:
         issues.append("Decompiler error remains: " + str(file.relative_to(root)))
 settings = root / "ProjectSettings" / "EditorBuildSettings.asset"
 text = settings.read_text(encoding="utf-8")
-scenes = re.findall(r"^    path: (.+\\.unity)$", text, re.MULTILINE)
+scenes = re.findall(r"^    path: (.+\.unity)$", text, re.MULTILINE)
 if len(scenes) < 2 or scenes[0] != "Assets/Scenes/GamePlay.unity":
     issues.append("First build scene must be GamePlay, followed by at least one level")
 for scene in scenes:
