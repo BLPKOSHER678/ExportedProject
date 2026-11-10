@@ -1,19 +1,51 @@
-Shader "Unlit/TransparentColor" {
-Properties {
- _Color ("Color", Color) = (1,1,1,1)
- _MainTex ("Base", 2D) = "white" {}
-}
-SubShader { 
- Tags { "QUEUE"="Transparent" "IGNOREPROJECTOR"="True" "RenderType"="Transparent" }
- Pass {
-  Tags { "QUEUE"="Transparent" "IGNOREPROJECTOR"="True" "RenderType"="Transparent" }
-  Material {
-   Diffuse [_Color]
-  }
-  ZWrite Off
-  Fog { Mode Off }
-  Blend SrcAlpha OneMinusSrcAlpha
-  SetTexture [_MainTex] { ConstantColor [_Color] combine texture * constant }
- }
-}
+Shader "Unlit/TransparentColor"
+{
+    Properties
+    {
+        _MainTex ("Main Texture (RGBA)", 2D) = "white" {}
+        _Color ("Tint", Color) = (1, 1, 1, 1)
+    }
+    SubShader
+    {
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" }
+        LOD 100
+        Cull Off
+        Lighting Off
+        ZWrite Off
+        Blend SrcAlpha OneMinusSrcAlpha
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #include "UnityCG.cginc"
+
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+            struct v2f
+            {
+                float4 position : SV_POSITION;
+                float2 uv : TEXCOORD0;
+            };
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
+            fixed4 _Color;
+            v2f vert(appdata v)
+            {
+                v2f o;
+                o.position = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                return o;
+            }
+            fixed4 frag(v2f i) : SV_Target
+            {
+                return tex2D(_MainTex, i.uv) * _Color;
+            }
+            ENDCG
+        }
+    }
+    Fallback "Unlit/Color"
 }
