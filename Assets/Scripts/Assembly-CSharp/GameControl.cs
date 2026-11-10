@@ -73,6 +73,9 @@ public class GameControl : MonoBehaviour
 	private float timeScaleBkp;
 
     private bool dead;
+    private GUIStyle restoredHudLabel;
+    private GUIStyle restoredHudCounter;
+    private GUIStyle restoredHudButton;
     private Coroutine loadJob;
     private string loadedSceneName;
 
@@ -227,7 +230,59 @@ public class GameControl : MonoBehaviour
         timeScaleBkp = 1f;
         if (gameCamera == null) gameCamera = FindObjectOfType<CamControl>();
         if (hud == null) hud = FindObjectOfType<HUD>();
+        DisableBrokenLegacyOverlay();
 	}
+
+    private void DisableBrokenLegacyOverlay()
+    {
+        // The decompiled 2015 GUI controllers are non-functional, and their old
+        // materials show up as magenta squares. Keep those assets untouched.
+        foreach (Camera cam in FindObjectsOfType<Camera>())
+            if (cam.name == "GUICamera" || cam.name == "PopupCamera")
+                cam.enabled = false;
+    }
+
+    private void OnGUI()
+    {
+        if (!Application.isPlaying || levels == null || levels.Length == 0) return;
+        float scale = Mathf.Clamp(Screen.height / 480f, 0.65f, 2f);
+        int labelSize = Mathf.RoundToInt(18f * scale);
+        if (restoredHudLabel == null || restoredHudLabel.fontSize != labelSize)
+        {
+            restoredHudLabel = new GUIStyle(GUI.skin.label);
+            restoredHudLabel.fontSize = labelSize;
+            restoredHudLabel.fontStyle = FontStyle.Bold;
+            restoredHudLabel.normal.textColor = Color.white;
+            restoredHudLabel.alignment = TextAnchor.MiddleLeft;
+            restoredHudCounter = new GUIStyle(restoredHudLabel);
+            restoredHudCounter.fontSize = Mathf.RoundToInt(27f * scale);
+            restoredHudButton = new GUIStyle(GUI.skin.button);
+            restoredHudButton.fontSize = Mathf.RoundToInt(14f * scale);
+            restoredHudButton.fontStyle = FontStyle.Bold;
+            restoredHudButton.normal.textColor = Color.white;
+        }
+
+        GUI.Label(new Rect(15f * scale, 12f * scale, 125f * scale, 24f * scale),
+            "JUMPS", restoredHudLabel);
+        GUI.Label(new Rect(18f * scale, 35f * scale, 115f * scale, 34f * scale),
+            jumpCount.ToString(), restoredHudCounter);
+        GUI.Label(new Rect(Screen.width - 220f * scale, 12f * scale,
+            118f * scale, 30f * scale),
+            "LEVEL " + (currentLevel + 1), restoredHudLabel);
+        if (GUI.Button(new Rect(Screen.width - 100f * scale, 13f * scale,
+            86f * scale, 31f * scale), "RETRY", restoredHudButton))
+        {
+            if (paused) unpauseGame();
+            retryLevel();
+        }
+        if (GUI.Button(new Rect(Screen.width - 100f * scale, 50f * scale,
+            86f * scale, 31f * scale),
+            paused ? "PLAY" : "PAUSE", restoredHudButton))
+        {
+            if (paused) unpauseGame();
+            else pauseGame();
+        }
+    }
 
 	private void Start()
 	{
