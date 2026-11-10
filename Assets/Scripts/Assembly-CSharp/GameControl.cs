@@ -76,6 +76,24 @@ public class GameControl : MonoBehaviour
     private Coroutine loadJob;
     private string loadedSceneName;
 
+    private void RefreshMissingLevels()
+    {
+        bool stale = levels == null || levels.Length == 0;
+        if (!stale)
+            foreach (string sceneName in levels)
+                if (!Application.CanStreamedLevelBeLoaded(sceneName)) { stale = true; break; }
+        if (!stale) return;
+
+        System.Collections.Generic.List<string> available = new System.Collections.Generic.List<string>();
+        for (int index = 1; index < SceneManager.sceneCountInBuildSettings; index++)
+        {
+            string path = SceneUtility.GetScenePathByBuildIndex(index);
+            string name = System.IO.Path.GetFileNameWithoutExtension(path);
+            if (!string.IsNullOrEmpty(name)) available.Add(name);
+        }
+        if (available.Count > 0) levels = available.ToArray();
+    }
+
     private IEnumerator NextLevelAfterDelay()
     {
         yield return new WaitForSeconds(2f);
@@ -146,6 +164,7 @@ public class GameControl : MonoBehaviour
 
 	private void Start()
 	{
+        RefreshMissingLevels();
         if (levels == null || levels.Length == 0) { Debug.LogError("Jelly Jump: no levels are configured."); return; }
         currentLevel = Mathf.Clamp(PlayerData.instance.currentLevel, 0, levels.Length - 1);
         if (startLevel > 0) currentLevel = Mathf.Clamp(startLevel, 0, levels.Length - 1);
