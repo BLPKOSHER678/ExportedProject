@@ -49,7 +49,7 @@ public class IAPCaller : MonoBehaviour, TFGWindow.Listener
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -57,7 +57,7 @@ public class IAPCaller : MonoBehaviour, TFGWindow.Listener
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -92,13 +92,13 @@ public class IAPCaller : MonoBehaviour, TFGWindow.Listener
 	[DebuggerHidden]
 	private IEnumerator buySimulator(bool confirmBuy)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	[DebuggerHidden]
 	private IEnumerator restoreSimulator(int toRestore)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void OnProvideProduct(string productID)
@@ -115,7 +115,7 @@ public class IAPCaller : MonoBehaviour, TFGWindow.Listener
 
 	private static string[] parseProductPrices(string productPriceList)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public static void OnBuyingCancel()

@@ -137,17 +137,17 @@ public class Light2DEmitter : MonoBehaviour
 
 	private Vector3[] TransformTriangle(Vector3[] triangles, Transform trans)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private Vector2[] RadialMap(Vector3[] verts, float rotation)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private Vector2[] PlanerMap(Vector3[] verts, float rotation)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void CheckSafeValue()
