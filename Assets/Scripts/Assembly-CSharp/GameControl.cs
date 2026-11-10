@@ -89,7 +89,9 @@ public class GameControl : MonoBehaviour
         {
             string path = SceneUtility.GetScenePathByBuildIndex(index);
             string name = System.IO.Path.GetFileNameWithoutExtension(path);
-            if (!string.IsNullOrEmpty(name)) available.Add(name);
+            // Background scenes are also in Build Settings; they are not playable levels.
+            if (path.StartsWith("Assets/Levels/") && !string.IsNullOrEmpty(name))
+                available.Add(name);
         }
         if (available.Count > 0) levels = available.ToArray();
     }
@@ -118,6 +120,10 @@ public class GameControl : MonoBehaviour
                 yield return SceneManager.UnloadSceneAsync(oldScene);
         }
         loadedSceneName = levels[selected];
+        // The original world scenery is stored separately from each level.
+        // Previously we loaded the terrain alone, leaving only a flat blue camera clear color.
+        string desiredBackground = loadedSceneName.StartsWith("N") ? "bgW2" : "bgW1";
+        yield return LoadWorldBackground(desiredBackground);
         yield return SceneManager.LoadSceneAsync(loadedSceneName, LoadSceneMode.Additive);
         startPoint = null;
         endPoint = null;
@@ -137,6 +143,31 @@ public class GameControl : MonoBehaviour
         }
         ResetLevelAfterLoad();
         loadJob = null;
+    }
+
+    private string loadedBackgroundName;
+
+    private IEnumerator LoadWorldBackground(string sceneName)
+    {
+        if (loadedBackgroundName == sceneName)
+        {
+            Scene alreadyLoaded = SceneManager.GetSceneByName(sceneName);
+            if (alreadyLoaded.IsValid() && alreadyLoaded.isLoaded) yield break;
+        }
+        if (!string.IsNullOrEmpty(loadedBackgroundName))
+        {
+            Scene previous = SceneManager.GetSceneByName(loadedBackgroundName);
+            if (previous.IsValid() && previous.isLoaded)
+                yield return SceneManager.UnloadSceneAsync(previous);
+        }
+        loadedBackgroundName = null;
+        if (!Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            Debug.LogWarning("Jelly Jump: background scene not in Build Settings: " + sceneName);
+            yield break;
+        }
+        yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        loadedBackgroundName = sceneName;
     }
 
     private void ResetLevelAfterLoad()
