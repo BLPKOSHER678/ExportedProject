@@ -1,42 +1,22 @@
 using System;
-using System.Collections;
-using System.Diagnostics;
-using UnityEngine;
 
 namespace Ads
 {
-	public class IAd : Banner
-	{
-		private ADBannerView _banner;
+    /// <summary>
+    /// Compatibility shim for Apple's discontinued iAd banner service.
+    /// The original ad implementation is intentionally disabled in modern Unity.
+    /// </summary>
+    public class IAd : Banner
+    {
+        public override void Show(Action<bool> callback)
+        {
+            // Do not attempt to load deprecated iAd banners.
+            if (callback != null) callback(false);
+        }
 
-		private void OnDestroy()
-		{
-		}
-
-		private void Start()
-		{
-		}
-
-		private void CreateBanner()
-		{
-		}
-
-		private void OnBannerClicked()
-		{
-		}
-
-		public override void Show(Action<bool> callback)
-		{
-		}
-
-		public override void Hide()
-		{
-		}
-
-		[DebuggerHidden]
-		private IEnumerator WaitBannerLoad(Action<bool> callback)
-		{
-			return default;
-		}
-	}
+        public override void Hide()
+        {
+            // No ad to hide.
+        }
+    }
 }
