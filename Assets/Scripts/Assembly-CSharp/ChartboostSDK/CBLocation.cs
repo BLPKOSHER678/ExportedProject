@@ -48,12 +48,12 @@ namespace ChartboostSDK
 
 		public override string ToString()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static CBLocation locationFromName(string name)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 }

@@ -71,7 +71,7 @@ namespace ChartboostSDK
 		{
 			get
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace ChartboostSDK
 		{
 			get
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 		}
 
@@ -87,7 +87,7 @@ namespace ChartboostSDK
 		{
 			get
 			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+				return default;
 			}
 			set
 			{
@@ -104,7 +104,7 @@ namespace ChartboostSDK
 
 		public static string getIOSAppId()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public void SetIOSAppSecret(string secret)
@@ -113,7 +113,7 @@ namespace ChartboostSDK
 
 		public static string getIOSAppSecret()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public void SetAndroidAppId(string id)
@@ -122,7 +122,7 @@ namespace ChartboostSDK
 
 		public static string getAndroidAppId()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public void SetAndroidAppSecret(string secret)
@@ -131,7 +131,7 @@ namespace ChartboostSDK
 
 		public static string getAndroidAppSecret()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public void SetAmazonAppId(string id)
@@ -140,7 +140,7 @@ namespace ChartboostSDK
 
 		public static string getAmazonAppId()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public void SetAmazonAppSecret(string secret)
@@ -149,17 +149,17 @@ namespace ChartboostSDK
 
 		public static string getAmazonAppSecret()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static string getSelectAndroidAppId()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static string getSelectAndroidAppSecret()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static void enableLogging(bool enabled)
@@ -168,7 +168,7 @@ namespace ChartboostSDK
 
 		public static bool isLogging()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		private static void DirtyEditor()

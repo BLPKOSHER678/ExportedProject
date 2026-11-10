@@ -412,7 +412,7 @@ namespace ChartboostSDK
 
 		public static bool hasInterstitial(CBLocation location)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static void showInterstitial(CBLocation location)
@@ -425,7 +425,7 @@ namespace ChartboostSDK
 
 		public static bool hasMoreApps(CBLocation location)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static void showMoreApps(CBLocation location)
@@ -438,7 +438,7 @@ namespace ChartboostSDK
 
 		public static bool hasRewardedVideo(CBLocation location)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static void showRewardedVideo(CBLocation location)
@@ -451,12 +451,12 @@ namespace ChartboostSDK
 
 		public static bool hasInPlay(CBLocation location)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static CBInPlay getInPlay(CBLocation location)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static void didPassAgeGate(bool pass)
@@ -469,7 +469,7 @@ namespace ChartboostSDK
 
 		public static string getCustomId()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static void setCustomId(string customId)
@@ -478,7 +478,7 @@ namespace ChartboostSDK
 
 		public static bool getAutoCacheAds()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		public static void setAutoCacheAds(bool autoCacheAds)
@@ -519,7 +519,7 @@ namespace ChartboostSDK
 
 		private static CBImpressionError impressionErrorFromInt(object errorObj)
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		private void didFailToLoadInterstitialEvent(string dataString)
@@ -640,7 +640,7 @@ namespace ChartboostSDK
 
 		public static bool isImpressionVisible()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 }
