@@ -31,7 +31,7 @@ public class WorldMap : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -53,7 +53,7 @@ public class WorldMap : MonoBehaviour
 
 	public bool isWorldOn(int world)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void OnSelectLevel(string level)
@@ -63,7 +63,7 @@ public class WorldMap : MonoBehaviour
 	[DebuggerHidden]
 	private IEnumerator StartLevel()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void OnEndButtonEfx()
