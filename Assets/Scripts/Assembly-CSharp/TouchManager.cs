@@ -9,10 +9,14 @@ public class TouchManager : MonoBehaviour
 
 		public TFGScreenTouch(Touch touch)
 		{
+	
+            this.touch = new _Touch(touch);
 		}
 
 		public TFGScreenTouch(_Touch touch)
 		{
+	
+            this.touch = touch;
 		}
 	}
 
@@ -28,10 +32,20 @@ public class TouchManager : MonoBehaviour
 
 		public TFGTouch(Touch touch, RaycastHit hitInfo)
 		{
+	
+            this.touch = new _Touch(touch);
+            worldPosition = hitInfo.point;
+            relativeDeltaPosition = touch.deltaPosition;
+            distance = hitInfo.distance;
 		}
 
 		public TFGTouch(_Touch touch, RaycastHit hitInfo)
 		{
+	
+            this.touch = touch;
+            worldPosition = hitInfo.point;
+            relativeDeltaPosition = touch.deltaPosition;
+            distance = hitInfo.distance;
 		}
 	}
 
@@ -51,10 +65,24 @@ public class TouchManager : MonoBehaviour
 
 		public _Touch(int id, Vector2 pos, Vector2 dpos, float dt, int tc, TouchPhase ph)
 		{
+	
+            fingerId = id;
+            position = pos;
+            deltaPosition = dpos;
+            deltaTime = dt;
+            tapCount = tc;
+            phase = ph;
 		}
 
 		public _Touch(Touch t)
 		{
+	
+            fingerId = t.fingerId;
+            position = t.position;
+            deltaPosition = t.deltaPosition;
+            deltaTime = t.deltaTime;
+            tapCount = t.tapCount;
+            phase = t.phase;
 		}
 	}
 
