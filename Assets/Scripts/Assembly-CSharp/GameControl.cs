@@ -182,11 +182,16 @@ public class GameControl : MonoBehaviour
         {
             // Temporary playable fallback; the original jelly model must still be restored.
             player = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            player.name = "Jelly (temporary fallback)";
+            player.name = "Jelly (reconstructed fallback)";
+            // Keep a small, invisible sphere collider for 2.5D physics.
+            // The visible character is built separately to approximate the reference footage.
             player.transform.localScale = Vector3.one * 0.75f;
+            MeshRenderer placeholderRenderer = player.GetComponent<MeshRenderer>();
+            if (placeholderRenderer != null) placeholderRenderer.enabled = false;
             Rigidbody body = player.AddComponent<Rigidbody>();
             body.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             player.AddComponent<CharacterControl>();
+            player.AddComponent<RecoveredJellyVisual>();
         }
         CharacterControl control = player.GetComponent<CharacterControl>();
         if (control != null) { control.gameControl = this; control.reset(); }
