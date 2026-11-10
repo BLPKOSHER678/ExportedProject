@@ -213,7 +213,11 @@ public class CharacterControl : MonoBehaviour
         if (finished || body == null) return;
         timerLateGround = Mathf.Max(0f, timerLateGround - Time.deltaTime);
         jumpCooldown = Mathf.Max(0f, jumpCooldown - Time.deltaTime);
-        bool pressed = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space);
+        bool mousePressed = Input.GetMouseButtonDown(0);
+        // Taps on the top HUD should not also trigger a jump.
+        if (mousePressed && Input.mousePosition.y >= Screen.height - Mathf.Max(58f, Screen.height * 0.18f))
+            mousePressed = false;
+        bool pressed = mousePressed || Input.GetKeyDown(KeyCode.Space);
         if (pressed && !(gameControl != null && gameControl.paused)) Jump();
         if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space)) jumping = false;
         if (body.position.y < dieHeight && gameControl != null && !gameControl.isPlayerDied())
@@ -282,7 +286,10 @@ public class CharacterControl : MonoBehaviour
 	{
         if (other == null || gameControl == null || finished) return;
         string lowerName = other.gameObject.name.ToLowerInvariant();
-        if (lowerName.Contains("end") || lowerName.Contains("portalend"))
+        if (lowerName.Contains("deathheight") || lowerName.Contains("deathzone") ||
+            lowerName.Contains("killzone"))
+            gameControl.playerDied(GameControl.DeathType.HEIGHT);
+        else if (lowerName.Contains("end") || lowerName.Contains("portalend"))
             gameControl.getToEndPoint();
         else if (lowerName.Contains("heart"))
         {
