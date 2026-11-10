@@ -42,7 +42,7 @@ public class TFGInterfaceManager : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -50,7 +50,7 @@ public class TFGInterfaceManager : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -84,7 +84,7 @@ public class TFGInterfaceManager : MonoBehaviour
 
 	public TFGWindow getActiveScreen()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void back()
@@ -105,11 +105,11 @@ public class TFGInterfaceManager : MonoBehaviour
 
 	public TFGWindow[] getScreenList()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public TFGWindow getScreenWindow(string name)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 }

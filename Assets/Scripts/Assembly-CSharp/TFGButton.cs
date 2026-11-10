@@ -71,7 +71,7 @@ public class TFGButton : MonoBehaviour
 		[DebuggerHidden]
 		private IEnumerator executeDelayed()
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 
 		private void efetiveExecute()
@@ -143,7 +143,7 @@ public class TFGButton : MonoBehaviour
 
 	private Vector3 getCamPosition()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void Start()
@@ -172,17 +172,17 @@ public class TFGButton : MonoBehaviour
 
 	public Action addAction()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public Action addAction(Action act)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public Action getAction(int index)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void executeAll()
@@ -203,7 +203,7 @@ public class TFGButton : MonoBehaviour
 
 	public bool isActivated()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	private void onTouchEnded(TouchManager.TFGTouch touch)
@@ -212,7 +212,7 @@ public class TFGButton : MonoBehaviour
 
 	public bool sendButtonEnded()
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public void executeEnded()
