@@ -86,4 +86,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Levels/N4.unity
     guid: 9922afbd1663d5843b4de160f7d983e7
+  - enabled: 1
+    path: Assets/Backgrounds/world1/bgW1.unity
+    guid: c365200d93e028f4d8b4fb35c99bcda7
+  - enabled: 1
+    path: Assets/Backgrounds/world2/bgW2.unity
+    guid: 9a42df3770593b54da427e222673b83a
   m_configObjects: {}
