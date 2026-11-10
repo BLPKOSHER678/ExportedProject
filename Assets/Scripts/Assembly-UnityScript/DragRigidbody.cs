@@ -1,83 +1,126 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Boo.Lang;
 using UnityEngine;
 
+/// <summary>
+/// Unity 2022-compatible replacement for the legacy UnityScript rigidbody drag helper.
+/// Retains the original component name and serialized fields.
+/// </summary>
 [Serializable]
 public class DragRigidbody : MonoBehaviour
 {
-	[Serializable]
-	internal sealed class _0024DragObject_00243 : GenericGenerator<object>
-	{
-		[Serializable]
-		internal sealed class _0024 : GenericGeneratorEnumerator<object>, IEnumerator
-		{
-			internal float _0024oldDrag_00244;
+    public float spring = 50f;
+    public float damper = 5f;
+    public float drag = 10f;
+    public float angularDrag = 5f;
+    public float distance = 0.2f;
+    public bool attachToCenterOfMass = false;
 
-			internal float _0024oldAngularDrag_00245;
+    private SpringJoint springJoint;
+    private Rigidbody draggedBody;
+    private float oldDrag;
+    private float oldAngularDrag;
 
-			internal Camera _0024mainCamera_00246;
+    public virtual void Update()
+    {
+        if (!Input.GetMouseButtonDown(0))
+            return;
 
-			internal Ray _0024ray_00247;
+        Camera activeCamera = FindCamera();
+        if (activeCamera == null)
+            return;
 
-			internal float _0024distance_00248;
+        Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (!Physics.Raycast(ray, out hit, 100f))
+            return;
 
-			internal DragRigidbody _0024self__00249;
+        Rigidbody target = hit.rigidbody;
+        if (target == null || target.isKinematic)
+            return;
 
-			public _0024(float distance, DragRigidbody self_)
-			{
-			}
+        if (springJoint == null)
+        {
+            GameObject helper = new GameObject("Rigidbody dragger");
+            Rigidbody helperBody = helper.AddComponent<Rigidbody>();
+            helperBody.isKinematic = true;
+            helperBody.useGravity = false;
+            springJoint = helper.AddComponent<SpringJoint>();
+            springJoint.autoConfigureConnectedAnchor = false;
+        }
 
-			public override bool MoveNext()
-			{
-				/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
-			}
-		}
+        ReleaseDraggedBody();
 
-		internal float _0024distance_002410;
+        springJoint.transform.position = hit.point;
+        springJoint.anchor = Vector3.zero;
+        springJoint.connectedAnchor = attachToCenterOfMass
+            ? target.centerOfMass
+            : target.transform.InverseTransformPoint(hit.point);
+        springJoint.spring = spring;
+        springJoint.damper = damper;
+        springJoint.minDistance = 0f;
+        springJoint.maxDistance = distance;
+        springJoint.connectedBody = target;
 
-		internal DragRigidbody _0024self__002411;
+        StartCoroutine(DragObject(hit.distance));
+    }
 
-		public _0024DragObject_00243(float distance, DragRigidbody self_)
-		{
-		}
+    public virtual IEnumerator DragObject(float hitDistance)
+    {
+        if (springJoint == null || springJoint.connectedBody == null)
+            yield break;
 
-		public override IEnumerator<object> GetEnumerator()
-		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
-		}
-	}
+        draggedBody = springJoint.connectedBody;
+        oldDrag = draggedBody.drag;
+        oldAngularDrag = draggedBody.angularDrag;
+        draggedBody.drag = drag;
+        draggedBody.angularDrag = angularDrag;
 
-	public float spring;
+        Camera activeCamera = FindCamera();
+        while (Input.GetMouseButton(0) &&
+               activeCamera != null &&
+               springJoint != null &&
+               springJoint.connectedBody == draggedBody)
+        {
+            Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
+            springJoint.transform.position = ray.GetPoint(hitDistance);
+            yield return null;
+        }
 
-	public float damper;
+        ReleaseDraggedBody();
+    }
 
-	public float drag;
+    public virtual Camera FindCamera()
+    {
+        Camera attachedCamera = GetComponent<Camera>();
+        return attachedCamera != null ? attachedCamera : Camera.main;
+    }
 
-	public float angularDrag;
+    private void ReleaseDraggedBody()
+    {
+        if (draggedBody != null)
+        {
+            draggedBody.drag = oldDrag;
+            draggedBody.angularDrag = oldAngularDrag;
+            draggedBody = null;
+        }
 
-	public float distance;
+        if (springJoint != null)
+            springJoint.connectedBody = null;
+    }
 
-	public bool attachToCenterOfMass;
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        ReleaseDraggedBody();
+    }
 
-	private SpringJoint springJoint;
+    private void OnDestroy()
+    {
+        if (springJoint != null)
+            Destroy(springJoint.gameObject);
+    }
 
-	public virtual void Update()
-	{
-	}
-
-	public virtual IEnumerator DragObject(float distance)
-	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
-	}
-
-	public virtual Camera FindCamera()
-	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
-	}
-
-	public virtual void Main()
-	{
-	}
+    // Retained for compatibility with references to the original UnityScript class.
+    public virtual void Main() { }
 }
