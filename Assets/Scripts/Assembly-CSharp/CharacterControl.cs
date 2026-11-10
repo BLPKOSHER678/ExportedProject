@@ -97,6 +97,9 @@ public class CharacterControl : MonoBehaviour
 	private float audioCoolDown;
 
     private Rigidbody body;
+    private float jumpCooldown;
+    private const float DefaultHorizontalJump = 11f;
+    private const float DefaultVerticalJump = 9f;
 
     private void OnCollisionStay(Collision collisionInfo) { UpdateContact(collisionInfo); }
 
@@ -171,22 +174,36 @@ public class CharacterControl : MonoBehaviour
         if (body == null) body = gameObject.AddComponent<Rigidbody>();
         body.constraints |= RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         if (gameControl == null) gameControl = FindObjectOfType<GameControl>();
-        if (jumpForce.y <= 0f) jumpForce.y = 8f;
-        if (jumpingDuration <= 0f) jumpingDuration = 0.24f;
-        if (lateGroundTime <= 0f) lateGroundTime = 0.1f;
+        // The original gameplay videos show the jelly waiting until a tap: NO automatic forward movement.
+        if (Mathf.Abs(jumpForce.x) < 0.1f) jumpForce.x = DefaultHorizontalJump;
+        if (jumpForce.y <= 0f) jumpForce.y = DefaultVerticalJump;
+        if (jumpingDuration <= 0f) jumpingDuration = 0.22f;
+        if (lateGroundTime <= 0f) lateGroundTime = 0.10f;
+        if (dieHeight == 0f) dieHeight = -40f;
+        body.drag = 0f;
         airJumpCount = Mathf.Max(0, airJumps);
 	}
 
 	private void FixedUpdate()
 	{
         if (finished || body == null || (gameControl != null && gameControl.paused)) return;
-        float speed = catAdjustSpeed > 0.05f ? catAdjustSpeed : 4f;
         Vector3 velocity = body.velocity;
-        velocity.x = speed;
+        // Ground friction stops the jelly at each platform, as seen in the original recordings.
+        // Airborne velocity is preserved between jumps, rather than applying automatic running.
+        if (grounded && !jumping)
+        {
+            float braking = groundAdjustSpeed > 0.1f ? groundAdjustSpeed * 3f : 30f;
+            velocity.x = Mathf.MoveTowards(velocity.x, 0f, braking * Time.fixedDeltaTime);
+        }
         if (jumping && jumpingDurVal > 0f && (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space)))
         {
-            velocity.y = Mathf.Max(velocity.y, jumpForce.y * 0.75f);
+            // Holding extends the ascending part of a jump; releasing cuts it short.
+            body.AddForce(Vector3.up * Mathf.Max(3f, jumpForce.y * 2f), ForceMode.Acceleration);
             jumpingDurVal -= Time.fixedDeltaTime;
+        }
+        else if (jumping)
+        {
+            jumping = false;
         }
         body.velocity = velocity;
 	}
@@ -195,6 +212,7 @@ public class CharacterControl : MonoBehaviour
 	{
         if (finished || body == null) return;
         timerLateGround = Mathf.Max(0f, timerLateGround - Time.deltaTime);
+        jumpCooldown = Mathf.Max(0f, jumpCooldown - Time.deltaTime);
         bool pressed = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space);
         if (pressed && !(gameControl != null && gameControl.paused)) Jump();
         if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space)) jumping = false;
@@ -208,7 +226,8 @@ public class CharacterControl : MonoBehaviour
         jumping = false;
         pseudoGround = false;
         collisionCount = 0;
-        timerLateGround = 0f;
+        timerLateGround = 0.15f;
+        jumpCooldown = 0f;
         airJumpCount = Mathf.Max(0, airJumps);
         jumpingDurVal = 0f;
         if (body != null) { body.velocity = Vector3.zero; body.angularVelocity = Vector3.zero; }
@@ -223,18 +242,23 @@ public class CharacterControl : MonoBehaviour
 
 	public void Jump()
 	{
-        if (finished || body == null) return;
-        if (!grounded)
+        if (finished || body == null || jumpCooldown > 0f) return;
+        // The videos show successive ground jumps and wall jumps, not automatic running.
+        bool fromWall = walling;
+        if (!grounded && !fromWall)
         {
             if (airJumpCount <= 0) return;
             --airJumpCount;
         }
         pseudoGround = false;
         timerLateGround = 0f;
+        jumpCooldown = 0.10f;
         jumping = true;
         jumpingDurVal = jumpingDuration;
         Vector3 velocity = body.velocity;
-        velocity.y = jumpForce.y;
+        float horizontal = Mathf.Abs(jumpForce.x) > 0.1f ? jumpForce.x : DefaultHorizontalJump;
+        velocity.x = horizontal;
+        velocity.y = Mathf.Max(jumpForce.y, fromWall ? DefaultVerticalJump : 0f);
         body.velocity = velocity;
         if (gameControl != null) gameControl.spendJump();
         if (jumpClip != null) AudioSource.PlayClipAtPoint(jumpClip, transform.position);
@@ -244,8 +268,14 @@ public class CharacterControl : MonoBehaviour
 	{
         collisionCount++;
         UpdateContact(collisionInfo);
-        if (!passEnemies && collisionInfo.gameObject.name.ToLowerInvariant().Contains("enemy"))
-            if (gameControl != null) gameControl.playerDied(GameControl.DeathType.MONSTER);
+        if (gameControl != null && collisionInfo.collider != null)
+        {
+            string hitName = collisionInfo.collider.name.ToLowerInvariant();
+            // In the recovered levels the goal is a solid BoxCollider (not a trigger).
+            if (hitName == "endpoint" || hitName == "portalend") gameControl.getToEndPoint();
+            else if (!passEnemies && hitName.Contains("enemy"))
+                gameControl.playerDied(GameControl.DeathType.MONSTER);
+        }
 	}
 
 	private void OnTriggerEnter(Collider other)
