@@ -33,7 +33,7 @@ public class Popups : MonoBehaviour
 	{
 		get
 		{
-			/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+			return default;
 		}
 	}
 
@@ -43,7 +43,7 @@ public class Popups : MonoBehaviour
 
 	public static TFGWindow getPopup(string name)
 	{
-		/*Error: Method body consists only of 'ret', but nothing is being returned. Decompiled assembly might be a reference assembly.*/;
+		return default;
 	}
 
 	public static void scheduleDialog1(string caption, string content, string accept, string decline, TFGButton.Action acceptAct, TFGButton.Action declineAct, Texture2D pic)
