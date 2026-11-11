@@ -98,8 +98,17 @@ public class CharacterControl : MonoBehaviour
 
     private Rigidbody body;
     private float jumpCooldown;
-    private const float DefaultHorizontalJump = 11f;
-    private const float DefaultVerticalJump = 9f;
+    // From the user's web recreation physics.mjs. These values apply only
+    // to the generated placeholder player; existing original prefabs keep their tuning.
+    private const float DefaultHorizontalJump = 27.72f;
+    private const float DefaultVerticalJump = 25.2f;
+    private const float WebsiteGravity = 97.2f;
+    private const float JumpBufferSeconds = 0.10f;
+    private const float WallHoldSeconds = 2f / 1.8f;
+    private bool isRecoveredFallback;
+    private float queuedJumpSeconds;
+    private int requestedJumpDirection = 1;
+    private float wallContactTime;
 
     private void OnCollisionStay(Collision collisionInfo) { UpdateContact(collisionInfo); }
 
@@ -170,6 +179,7 @@ public class CharacterControl : MonoBehaviour
 
 	private void Awake()
 	{
+        isRecoveredFallback = name.Contains("(reconstructed fallback)");
         body = GetComponent<Rigidbody>();
         if (body == null) body = gameObject.AddComponent<Rigidbody>();
         body.constraints |= RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
@@ -187,6 +197,11 @@ public class CharacterControl : MonoBehaviour
 	private void FixedUpdate()
 	{
         if (finished || body == null || (gameControl != null && gameControl.paused)) return;
+        // The browser reconstruction runs at a real-time gravity of 97.2.
+        // Unity's archived project uses -30, and GameControl restores timeScale to 1;
+        // compensate only for the reconstructed player to avoid altering recovered prefabs.
+        if (isRecoveredFallback)
+            body.AddForce(Vector3.up * (-WebsiteGravity - Physics.gravity.y), ForceMode.Acceleration);
         Vector3 velocity = body.velocity;
         // Ground friction stops the jelly at each platform, as seen in the original recordings.
         // Airborne velocity is preserved between jumps, rather than applying automatic running.
@@ -206,6 +221,8 @@ public class CharacterControl : MonoBehaviour
             jumping = false;
         }
         body.velocity = velocity;
+        if (queuedJumpSeconds > 0f)
+            TryBufferedJump();
 	}
 
 	private void Update()
@@ -213,12 +230,28 @@ public class CharacterControl : MonoBehaviour
         if (finished || body == null) return;
         timerLateGround = Mathf.Max(0f, timerLateGround - Time.deltaTime);
         jumpCooldown = Mathf.Max(0f, jumpCooldown - Time.deltaTime);
+        queuedJumpSeconds = Mathf.Max(0f, queuedJumpSeconds - Time.deltaTime);
+        if (walling)
+        {
+            wallContactTime += Time.deltaTime;
+            if (wallContactTime > WallHoldSeconds) wallHitNormal = Vector3.zero;
+        }
+        else wallContactTime = 0f;
         bool mousePressed = Input.GetMouseButtonDown(0);
         // Taps on the top HUD should not also trigger a jump.
         if (mousePressed && Input.mousePosition.y >= Screen.height - Mathf.Max(58f, Screen.height * 0.18f))
             mousePressed = false;
         bool pressed = mousePressed || Input.GetKeyDown(KeyCode.Space);
-        if (pressed && !(gameControl != null && gameControl.paused)) Jump();
+        if (pressed && !(gameControl != null && gameControl.paused))
+        {
+            // The website uses screen side to pick the forward direction.
+            // Keyboard Space preserves the current direction.
+            if (mousePressed)
+                requestedJumpDirection = Input.mousePosition.x < Screen.width * 0.5f ? -1 : 1;
+            QueueJump();
+        }
+        if (queuedJumpSeconds > 0f && ! (gameControl != null && gameControl.paused))
+            TryBufferedJump();
         if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space)) jumping = false;
         if (body.position.y < dieHeight && gameControl != null && !gameControl.isPlayerDied())
             gameControl.playerDied(GameControl.DeathType.HEIGHT);
@@ -234,6 +267,9 @@ public class CharacterControl : MonoBehaviour
         jumpCooldown = 0f;
         airJumpCount = Mathf.Max(0, airJumps);
         jumpingDurVal = 0f;
+        queuedJumpSeconds = 0f;
+        wallContactTime = 0f;
+        requestedJumpDirection = 1;
         if (body != null) { body.velocity = Vector3.zero; body.angularVelocity = Vector3.zero; }
 	}
 
@@ -243,6 +279,20 @@ public class CharacterControl : MonoBehaviour
         jumping = false;
         if (body != null) body.velocity = new Vector3(0f, Mathf.Max(endingJumpSpeed, jumpForce.y * 0.6f), 0f);
 	}
+
+    private void QueueJump()
+    {
+        queuedJumpSeconds = JumpBufferSeconds;
+        TryBufferedJump();
+    }
+
+    private void TryBufferedJump()
+    {
+        if (queuedJumpSeconds <= 0f || finished || body == null || jumpCooldown > 0f) return;
+        if (!grounded && !walling && airJumpCount <= 0) return;
+        queuedJumpSeconds = 0f;
+        Jump();
+    }
 
 	public void Jump()
 	{
@@ -261,8 +311,20 @@ public class CharacterControl : MonoBehaviour
         jumpingDurVal = jumpingDuration;
         Vector3 velocity = body.velocity;
         float horizontal = Mathf.Abs(jumpForce.x) > 0.1f ? jumpForce.x : DefaultHorizontalJump;
-        velocity.x = horizontal;
-        velocity.y = Mathf.Max(jumpForce.y, fromWall ? DefaultVerticalJump : 0f);
+        float vertical = Mathf.Abs(jumpForce.y) > 0.1f ? jumpForce.y : DefaultVerticalJump;
+        int direction = requestedJumpDirection != 0 ? requestedJumpDirection : 1;
+        // A wall jump must push away from the contacted wall. The web game
+        // derives that vector from the collision surface normal.
+        if (fromWall)
+        {
+            velocity.x = Mathf.Sign(wallHitNormal.x) * horizontal;
+            velocity.y = vertical;
+        }
+        else
+        {
+            velocity.x = direction * horizontal;
+            velocity.y = vertical;
+        }
         body.velocity = velocity;
         if (gameControl != null) gameControl.spendJump();
         if (jumpClip != null) AudioSource.PlayClipAtPoint(jumpClip, transform.position);
@@ -272,6 +334,7 @@ public class CharacterControl : MonoBehaviour
 	{
         collisionCount++;
         UpdateContact(collisionInfo);
+        if (queuedJumpSeconds > 0f) TryBufferedJump();
         if (gameControl != null && collisionInfo.collider != null)
         {
             string hitName = collisionInfo.collider.name.ToLowerInvariant();
@@ -319,7 +382,7 @@ public class CharacterControl : MonoBehaviour
 	private void OnCollisionExit(Collision collisionInfo)
 	{
         collisionCount = Mathf.Max(0, collisionCount - 1);
-        if (collisionCount == 0) { pseudoGround = false; wallHitNormal = Vector3.zero; }
+        if (collisionCount == 0) { pseudoGround = false; wallHitNormal = Vector3.zero; wallContactTime = 0f; }
         timerLateGround = lateGroundTime;
 	}
 
