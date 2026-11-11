@@ -185,8 +185,10 @@ public class CharacterControl : MonoBehaviour
         body.constraints |= RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         if (gameControl == null) gameControl = FindObjectOfType<GameControl>();
         // The original gameplay videos show the jelly waiting until a tap: NO automatic forward movement.
-        if (Mathf.Abs(jumpForce.x) < 0.1f) jumpForce.x = DefaultHorizontalJump;
-        if (jumpForce.y <= 0f) jumpForce.y = DefaultVerticalJump;
+        if (Mathf.Abs(jumpForce.x) < 0.1f)
+            jumpForce.x = isRecoveredFallback ? DefaultHorizontalJump : 11f;
+        if (jumpForce.y <= 0f)
+            jumpForce.y = isRecoveredFallback ? DefaultVerticalJump : 9f;
         if (jumpingDuration <= 0f) jumpingDuration = 0.22f;
         if (lateGroundTime <= 0f) lateGroundTime = 0.10f;
         if (dieHeight == 0f) dieHeight = -40f;
